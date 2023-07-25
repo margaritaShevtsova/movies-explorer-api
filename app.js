@@ -48,7 +48,7 @@ app.post('/signup', celebrate(
   },
 ), createUser);
 
-app.get('/logout', logout);
+app.get('/signout', logout);
 
 app.use(auth);
 

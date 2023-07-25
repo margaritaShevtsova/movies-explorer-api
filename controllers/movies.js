@@ -1,6 +1,7 @@
 const Movie = require('../models/movie');
 const ValidationError = require('../errors/validation-err');
 const NotFoundError = require('../errors/not-found-err');
+const ForbiddenError = require('../errors/forbidden-error');
 
 const getMovies = (req, res, next) => Movie.find({owner: req.user._id})
   .then((movies) => res.send(movies))
@@ -25,6 +26,8 @@ const deleteMovie = (req, res, next) => Movie.findById(req.params.movieId)
   .then((movie) => {
     if (!movie) {
       return next(new NotFoundError('Фильм не найден'));
+    } else if (movie.owner !== req.user._id) {
+      return next(new ForbiddenError('Это не ваш фильм'));
     }
     return Movie.deleteOne(movie._id);
   })
