@@ -42,7 +42,7 @@ app.post('/signin', celebrate(
     }),
   },
 ), login);
-app.post('signup', celebrate(
+app.post('/signup', celebrate(
   {
     body: Joi.object().keys({
       email: Joi.string().required().email(),
