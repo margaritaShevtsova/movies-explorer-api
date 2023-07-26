@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
@@ -5,24 +6,24 @@ const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const cookieParser = require('cookie-parser');
-// const cors = require('cors');
+const cors = require('cors');
 const { login, createUser, logout } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const movieRouter = require('./routes/movies');
 const userRouter = require('./routes/users');
 const NotFoundError = require('./errors/not-found-err');
 const { errorHandler } = require('./middlewares/errorHandler');
+const { MONGO_LINK } = process.env;
 
-// eslint-disable-next-line no-undef
 const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(cookieParser());
 app.use(helmet());
 
-// app.use(cors({ origin: 'https://shevtsova.mesto.nomoredomains.xyz', credentials: true }));
+app.use(cors({ credentials: true }));
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect( MONGO_LINK , {
   useNewUrlParser: true,
 });
 
