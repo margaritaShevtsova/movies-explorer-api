@@ -34,7 +34,7 @@ app.use(express.json());
 
 app.use(requestLogger);
 
-app.post('/signin', celebrate(
+app.post('/api/signin', celebrate(
   {
     body: Joi.object().keys({
       email: Joi.string().required().email(),
@@ -54,7 +54,7 @@ app.post('/api/signup', celebrate(
 
 app.use(auth);
 
-app.get('/signout', logout);
+app.get('/api/signout', logout);
 
 app.use(movieRouter, userRouter);
 
