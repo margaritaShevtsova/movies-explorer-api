@@ -3,7 +3,7 @@ const { celebrate, Joi } = require('celebrate');
 const { getMovies, createMovie, deleteMovie } = require('../controllers/movies');
 
 router.get('/movies', getMovies);
-router.post('/movies',celebrate(
+router.post('/movies', celebrate(
   {
     body: Joi.object().keys({
       country: Joi.string().required(),
@@ -12,6 +12,7 @@ router.post('/movies',celebrate(
       year: Joi.string().required(),
       description: Joi.string().required(),
       image: Joi.string().required().pattern(/^https?:\/\/(www\.)?[-a-zA-Z0-9-._~:/?#@!$&'()*+,;=/]{1,256}#?/),
+      trailerLink: Joi.string().required().pattern(/^https?:\/\/(www\.)?[-a-zA-Z0-9-._~:/?#@!$&'()*+,;=/]{1,256}#?/),
       thumbnail: Joi.string().required().pattern(/^https?:\/\/(www\.)?[-a-zA-Z0-9-._~:/?#@!$&'()*+,;=/]{1,256}#?/),
       movieId: Joi.number().required().unsafe(),
       nameRU: Joi.string().required(),

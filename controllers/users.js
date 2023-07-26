@@ -1,9 +1,8 @@
-/* eslint-disable no-undef */
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require("../models/user");
-const NotFoundError = require("../errors/not-found-err");
-const ValidationError = require("../errors/validation-err");
+const User = require('../models/user');
+const NotFoundError = require('../errors/not-found-err');
+const ValidationError = require('../errors/validation-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
 const ConflictError = require('../errors/conflict-err');
 
@@ -28,7 +27,7 @@ const editUser = (req, res, next) => {
   })
     .then((user) => {
       if (!user) {
-        return next(new NotFoundError("Пользователь не найден"));
+        return next(new NotFoundError('Пользователь не найден'));
       }
       return res.send(user);
     })
@@ -45,7 +44,7 @@ const editUser = (req, res, next) => {
 
 const createUser = (req, res, next) => {
   const {
-    email, password, name
+    email, password, name,
   } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
@@ -70,22 +69,22 @@ const createUser = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email })
-    .select("+password")
+    .select('+password')
     .then((user) => {
       if (!user) {
-        return next(new UnauthorizedError("Неправильные почта или пароль"));
+        return next(new UnauthorizedError('Неправильные почта или пароль'));
       }
 
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          return next(new ValidationError("Неправильные почта или пароль"));
+          return next(new ValidationError('Неправильные почта или пароль'));
         }
         const token = jwt.sign(
           { _id: user._id },
-          NODE_ENV === "production" ? JWT_SECRET : "some-secret-key"
+          NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
         );
         return res
-          .cookie("jwt", token, {
+          .cookie('jwt', token, {
             maxAge: 3600000,
             httpOnly: true,
             sameSite: true,
@@ -104,11 +103,11 @@ const login = (req, res, next) => {
     });
 };
 
-const logout = ( req, res ) => {
+const logout = (req, res) => {
   res.status(200)
     .clearCookie('jwt')
-    .send({ message: 'Вы вышли из профиля'});
-}
+    .send({ message: 'Вы вышли из профиля' });
+};
 
 module.exports = {
   getUser,
