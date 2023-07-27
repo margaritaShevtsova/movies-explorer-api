@@ -22,7 +22,6 @@ const { PORT = 3000 } = process.env;
 const app = express();
 app.use(cookieParser());
 app.use(helmet());
-app.use(limiter);
 
 app.use(cors({ credentials: true }));
 
@@ -33,6 +32,8 @@ mongoose.connect(NODE_ENV === 'production' ? MONGO_LINK : MONGO_DEV, {
 app.use(express.json());
 
 app.use(requestLogger);
+
+app.use(limiter);
 
 app.post('/api/signin', celebrate(
   {

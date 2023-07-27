@@ -47,16 +47,16 @@ const createMovie = (req, res, next) => {
     });
 };
 
-const deleteMovie = (req, res, next) => Movie.findById(req.params.movieId)
+const deleteMovie = (req, res, next) => Movie.findById(req.params._id)
   .then((movie) => {
     if (!movie) {
       return next(new NotFoundError('Фильм не найден'));
-    } if (movie.owner !== req.user._id) {
+    } if (!movie.owner.equals(req.user._id)) {
       return next(new ForbiddenError('Это не ваш фильм'));
     }
-    return Movie.deleteOne(movie._id);
+    return Movie.deleteOne(movie._id)
+      .then(() => res.send({ movie }));
   })
-  .then((movie) => res.send(movie))
   .catch((err) => {
     if (err.name === 'CastError') {
       next(new ValidationError('Данные не валидны'));
