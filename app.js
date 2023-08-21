@@ -23,7 +23,7 @@ const app = express();
 app.use(cookieParser());
 app.use(helmet());
 
-app.use(cors({ credentials: true }));
+app.use(cors({ credentials: true, origin: 'https://shevtsova.movies.nomoredomainsicu.ru' }));
 
 mongoose.connect(NODE_ENV === 'production' ? MONGO_LINK : MONGO_DEV, {
   useNewUrlParser: true,
@@ -35,14 +35,6 @@ app.use(requestLogger);
 
 app.use(limiter);
 
-app.post('/api/signin', celebrate(
-  {
-    body: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required().min(8),
-    }),
-  },
-), login);
 app.post('/api/signup', celebrate(
   {
     body: Joi.object().keys({
@@ -52,6 +44,15 @@ app.post('/api/signup', celebrate(
     }),
   },
 ), createUser);
+
+app.post('/api/signin', celebrate(
+  {
+    body: Joi.object().keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required().min(8),
+    }),
+  },
+), login);
 
 app.use(auth);
 
