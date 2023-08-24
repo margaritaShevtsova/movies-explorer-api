@@ -106,7 +106,9 @@ const login = (req, res, next) => {
 
 const logout = (req, res) => {
   res.status(200)
-    .clearCookie('jwt')
+    .clearCookie('jwt', {
+      sameSite: 'none',
+    })
     .send({ message: 'Вы вышли из профиля' });
 };
 
