@@ -21,10 +21,14 @@ const getUser = (req, res, next) => User.findById(req.user._id)
 
 const editUser = (req, res, next) => {
   const { email, name } = req.body;
-  User.findByIdAndUpdate(req.user._id, { email, name }, {
-    new: true,
-    runValidators: true,
-  })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { email, name },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
     .then((user) => {
       if (!user) {
         return next(new NotFoundError('Пользователь не найден'));
@@ -43,12 +47,13 @@ const editUser = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const {
-    email, password, name,
-  } = req.body;
-  bcrypt.hash(password, 10)
+  const { email, password, name } = req.body;
+  bcrypt
+    .hash(password, 10)
     .then((hash) => User.create({
-      email, password: hash, name,
+      email,
+      password: hash,
+      name,
     }))
     .then((newUser) => res.status(201).send({
       _id: newUser._id,
@@ -82,16 +87,12 @@ const login = (req, res, next) => {
         const token = jwt.sign(
           { _id: user._id },
           NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
+          { expiresIn: 3600 },
         );
         return res
-          .cookie('jwt', token, {
-            maxAge: 3600000,
-            httpOnly: true,
-            sameSite: 'none',
-            secure: true,
-          })
           .status(200)
           .send({
+            token,
             email: user.email,
             name: user.name,
             about: user.about,
@@ -105,7 +106,8 @@ const login = (req, res, next) => {
 };
 
 const logout = (req, res) => {
-  res.status(200)
+  res
+    .status(200)
     .clearCookie('jwt', {
       sameSite: 'none',
       secure: true,
