@@ -105,20 +105,9 @@ const login = (req, res, next) => {
     });
 };
 
-const logout = (req, res) => {
-  res
-    .status(200)
-    .clearCookie('jwt', {
-      sameSite: 'none',
-      secure: true,
-    })
-    .send({ message: 'Вы вышли из профиля' });
-};
-
 module.exports = {
   getUser,
   editUser,
   createUser,
   login,
-  logout,
 };

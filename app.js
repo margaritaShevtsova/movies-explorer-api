@@ -6,7 +6,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const auth = require('./middlewares/auth');
-const { login, createUser, logout } = require('./controllers/users');
+const { login, createUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const movieRouter = require('./routes/movies');
 const userRouter = require('./routes/users');
@@ -23,7 +23,7 @@ const app = express();
 app.use(cookieParser());
 app.use(helmet());
 
-app.use(cors({ credentials: true, origin: 'https://shevtsova.movies.nomoredomainsicu.ru' }));
+app.use(cors({ origin: 'https://shevtsova.movies.nomoredomainsicu.ru' }));
 
 mongoose.connect(NODE_ENV === 'production' ? MONGO_LINK : MONGO_DEV, {
   useNewUrlParser: true,
@@ -55,8 +55,6 @@ app.post('/api/signin', celebrate(
 ), login);
 
 app.use(auth);
-
-app.get('/api/signout', logout);
 
 app.use(movieRouter, userRouter);
 
